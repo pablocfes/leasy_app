@@ -1,7 +1,7 @@
 from django.db import models
-
+from core.models import AuditoriaMixin
 # Create your models here.
-class Car(models.Model):
+class Car(AuditoriaMixin):
     """
     Representa un auto disponible para alquiler.
     """

@@ -2,10 +2,11 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from vehiculos.models import Car
 from clientes.models import Client
+from core.models import AuditoriaMixin
 
 
 # Create your models here.
-class Contract(models.Model):
+class Contract(AuditoriaMixin):
     """
     Representa un contrato de alquiler entre un cliente y un auto.
     """

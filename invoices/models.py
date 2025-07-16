@@ -1,9 +1,10 @@
 from django.db import models
 from django.utils import timezone
 from contratos.models import Contract
-
+from core.models import AuditoriaMixin
 # Create your models here.
-class Invoice(models.Model):
+
+class Invoice(AuditoriaMixin):
     """
     Representa una cuota que el cliente debe pagar.
     """

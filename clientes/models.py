@@ -1,7 +1,8 @@
 from django.db import models
+from core.models import AuditoriaMixin
 
 # Create your models here.
-class Client(models.Model):
+class Client(AuditoriaMixin):
     """
     Representa a los clientes de Leasy.
     """
