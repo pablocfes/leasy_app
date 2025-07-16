@@ -1,7 +1,7 @@
 from django.db import models
 # Create your models here.
 
-class AuditoriaMixin(models):
+class AuditoriaMixin(models.Model):
     """
     Clase para agregar campos genéricos de auditoría
     """
