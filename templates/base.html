@@ -35,7 +35,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         {% comment %} <li><a class="dropdown-item" href="{% url 'perfil' %}">Mi Perfil</a></li> {% endcomment %}
                         <li>
-                            <form method="post" action="{% url 'logout' %}">
+                            <form method="post" action="{% url 'usuarios:logout' %}">
                                 {% csrf_token %}
                                 <button type="submit" class="dropdown-item">Cerrar Sesión</button>
                             </form>

@@ -1,7 +1,6 @@
 # django
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth import login
 from django.contrib import messages
@@ -17,7 +16,7 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-        return reverse_lazy('home')
+        return reverse_lazy('core:home')
 
     def form_invalid(self, form):
         messages.error(self.request, "Credenciales incorrectas. Por favor, inténtalo de nuevo.")
@@ -25,13 +24,13 @@ class CustomLoginView(LoginView):
 
 
 class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy('login')
+    next_page = reverse_lazy('usuarios:login')
 
 
 class RegisterView(FormView):
     template_name = 'register.html'
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('core:home')
 
     def form_valid(self, form):
         user = form.save()

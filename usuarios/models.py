@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+from usuarios.managers import UsuarioManager
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -10,8 +11,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
+    objects = UsuarioManager()
+
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email

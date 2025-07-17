@@ -11,7 +11,6 @@ class Invoice(AuditoriaMixin):
     contract = models.ForeignKey(Contract, on_delete=models.PROTECT, related_name='invoices', verbose_name="Contrato")
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
     installment_number = models.PositiveIntegerField(verbose_name="Número de cuota")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
     due_date = models.DateField(verbose_name="Fecha de vencimiento")
     payment_date = models.DateField(blank=True, null=True, verbose_name="Fecha de pago")
     is_paid = models.BooleanField(default=False, verbose_name="Pagada")

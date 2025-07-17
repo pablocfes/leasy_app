@@ -32,7 +32,7 @@
                                         </div>
                                         {% endif %}
 
-                                        <form method="post" action="{% url 'register' %}">
+                                        <form method="post" action="{% url 'usuarios:register' %}">
                                             {% csrf_token %}
 
                                             <div class="row mb-3">
@@ -75,7 +75,7 @@
                                         </form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="{% url 'login' %}">¿Ya tienes una cuenta? Ir a iniciar sesión</a></div>
+                                        <div class="small"><a href="{% url 'usuarios:login' %}">¿Ya tienes una cuenta? Ir a iniciar sesión</a></div>
                                     </div>
                                 </div>
                             </div>

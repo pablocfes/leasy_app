@@ -12,6 +12,17 @@ from contratos.models import Contract
 from clientes.models import Client
 from vehiculos.models import Car
 from invoices.models import Invoice
+from core.views import ModeloDinamicoListView
+
+
+class ListarContratosView(ModeloDinamicoListView):
+    model = Contract
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Listado de contratos'
+        return context
+
 
 class CargaArchivoView(FormView):
     template_name = "carga_archivo.html"
@@ -87,3 +98,4 @@ class CargaArchivoView(FormView):
         except Exception as e:
             messages.error(self.request, f"Error al procesar archivo: {str(e)}")
             return self.form_invalid(form)
+
