@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block contenido %}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Tablas de Datos</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">{{ titulo }}</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            {{ titulo }}
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead>
+                    <tr>
+                        {% for col in columnas %}
+                            <th>{{ col|capfirst }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        {% for col in columnas %}
+                            <th>{{ col|capfirst }}</th>
+                        {% endfor %}
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for fila in filas %}
+                        <tr>
+                            {% for valor in fila.values %}
+                                <td>{{ valor }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

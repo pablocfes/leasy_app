@@ -12,34 +12,34 @@
             <div class="card bg-primary text-white mb-4">
                 <div class="card-body">Usuarios Registrados</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    {% comment %} <a class="small text-white stretched-link" href="{% url 'usuarios' %}">Ver Detalles</a> {% endcomment %}
+                    <a class="small text-white stretched-link" href="{% url 'usuarios' %}">{{ usuarios_count }}</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
             <div class="card bg-warning text-white mb-4">
-                <div class="card-body">Productos Activos</div>
+                <div class="card-body">Clientes</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    {% comment %} <a class="small text-white stretched-link" href="{% url 'productos' %}">Ver Detalles</a> {% endcomment %}
+                    <a class="small text-white stretched-link" href="{% url 'clientes:listar' %}">{{ clientes_count }}</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
             <div class="card bg-success text-white mb-4">
-                <div class="card-body">Ventas Hoy</div>
+                <div class="card-body">Contratos Activos</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    {% comment %} <a class="small text-white stretched-link" href="{% url 'ventas' %}">Ver Detalles</a> {% endcomment %}
+                    <a class="small text-white stretched-link" href="{% url 'contratos:listar' %}">{{ contratos_count }}</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
             <div class="card bg-danger text-white mb-4">
-                <div class="card-body">Alertas</div>
+                <div class="card-body">Vehiculos disponibles</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    {% comment %} <a class="small text-white stretched-link" href="{% url 'alertas' %}">Ver Detalles</a> {% endcomment %}
+                    <a class="small text-white stretched-link" href="{% url 'vehiculos:listar' %}">{{ vehiculos_count }}</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
