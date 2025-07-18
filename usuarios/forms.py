@@ -17,7 +17,7 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['password2'].help_text = 'Ingresa la misma contraseña para verificación.'
 
     def clean_email(self):
-        email = self.cleaned_data.get("email")
+        email = self.cleaned_data.get("email").lower().strip()
         if not email:
             raise forms.ValidationError("El correo electrónico es obligatorio.")
         if Usuario.objects.filter(email=email).exists():
