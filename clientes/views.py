@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from core.views_genericos import ModeloDinamicoListView
 from clientes.models import Cliente
 

@@ -83,6 +83,7 @@ class CargaArchivoContratosView(LoginRequiredMixin, FormView):
                             defaults={
                                 "marca": fila["Marca del auto"],
                                 "modelo": fila["Modelo del auto"],
+                                "disponible": False,
                                 "usuario_creacion_id": usuario_id,
                             }
                         )
