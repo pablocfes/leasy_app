@@ -9,15 +9,6 @@
     <!-- Tarjetas de resumen -->
     <div class="row">
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white mb-4">
-                <div class="card-body">Usuarios Registrados</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <span class="small text-white stretched-link">{{ usuarios_count }}</span>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
             <div class="card bg-warning text-white mb-4">
                 <div class="card-body">Clientes</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
@@ -44,38 +35,65 @@
                 </div>
             </div>
         </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">Usuarios Registrados</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <span class="small text-white stretched-link">{{ usuarios_count }}</span>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Gráficos -->
 
     <!-- Tabla de datos -->
     <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            Últimas Actividades
-        </div>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h1 class="mt-4">{{ titulo }}</h1>
+        <a href="{% url 'contratos:cargar' %}" class="btn btn-primary">
+            <i class="fas fa-upload me-1"></i> Cargar Contratos Masivamente
+        </a>
+    </div>
         <div class="card-body">
-            <table id="datatablesSimple" class="table table-striped">
+            <table id="datatablesSimple" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Usuario</th>
-                        <th>Acción</th>
-                        <th>Fecha</th>
-                        <th>IP</th>
+                        {% for col in columnas %}
+                            <th>{{ col|capfirst }}</th>
+                        {% endfor %}
                     </tr>
                 </thead>
-                <tbody>
-                    {% for actividad in actividades %}
+                <tfoot>
                     <tr>
-                        <td>{{ actividad.usuario }}</td>
-                        <td>{{ actividad.accion }}</td>
-                        <td>{{ actividad.fecha|date:"d/m/Y H:i" }}</td>
-                        <td>{{ actividad.ip }}</td>
+                        {% for col in columnas %}
+                            <th>{{ col|capfirst }}</th>
+                        {% endfor %}
                     </tr>
+                </tfoot>
+                <tbody>
+                    {% for fila in filas %}
+                        <tr>
+                            {% for valor in fila %}
+                                <td>{{ valor }}</td>
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+<script>
+        window.addEventListener('DOMContentLoaded', event => {
+            const datatablesSimple = document.getElementById('datatablesSimple');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple, {
+                    perPage: 20, // Aquí configuras los 20 registros por defecto
+                    perPageSelect: [10, 20, 50, 100] // Opcional: define las opciones disponibles en el selector
+                });
+            }
+        });
+</script>
 {% endblock%}
+

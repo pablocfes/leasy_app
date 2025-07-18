@@ -1,4 +1,4 @@
-from core.views import ModeloDinamicoListView
+from core.views_genericos import ModeloDinamicoListView
 from invoices.models import Invoice
 
 class ListarInvoicesView(ModeloDinamicoListView):

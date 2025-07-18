@@ -8,15 +8,15 @@ import pandas as pd
 
 # propios
 from contratos.forms import ArchivoCargaForm
-from contratos.models import Contract
-from clientes.models import Client
-from vehiculos.models import Car
+from contratos.models import Contrato
+from clientes.models import Cliente
+from vehiculos.models import Carro
 from invoices.models import Invoice
-from core.views import ModeloDinamicoListView
-
+from core.views_genericos import ModeloDinamicoListView
+from core.mixins import LoginRequiredMixin
 
 class ListarContratosView(ModeloDinamicoListView):
-    model = Contract
+    model = Contrato
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -24,12 +24,14 @@ class ListarContratosView(ModeloDinamicoListView):
         return context
 
 
-class CargaArchivoView(FormView):
-    template_name = "carga_archivo.html"
+class CargaArchivoContratosView(LoginRequiredMixin, FormView):
+    template_name = "contratos/cargar_contratos.html"
     form_class = ArchivoCargaForm
-    success_url = reverse_lazy("carga-archivo")
+    success_url = reverse_lazy("contratos:cargar")
 
     def form_valid(self, form):
+
+        usuario_id = self.request.user.id
 
         COLUMNAS_REQUERIDAS = [
             "Nombres",
@@ -58,38 +60,47 @@ class CargaArchivoView(FormView):
 
             for _, fila in df.iterrows():
 
-                cliente, _ = Client.objects.get_or_create(
-                    documento=str(fila["Número de documento"]),
+                cliente, _ = Cliente.objects.get_or_create(
+                    numero_documento=str(fila["Número de documento"]),
                     defaults={
                         "nombres": fila["Nombres"],
                         "apellidos": fila["Apellidos"],
+                        "usuario_creacion_id": usuario_id,
                     }
                 )
 
-                auto, _ = Car.objects.get_or_create(
+                auto, _ = Carro.objects.get_or_create(
                     placa=fila["Placa del auto"],
                     defaults={
                         "marca": fila["Marca del auto"],
                         "modelo": fila["Modelo del auto"],
+                        "usuario_creacion_id": usuario_id,
                     }
                 )
 
                 fecha_inicio = parse_date(str(fila["Inicio de contrato"]))
-                contrato = Contract.objects.create(
-                    client=cliente,
-                    car=auto,
-                    cuota_semanal=fila["Cuota semanal"],
-                    semanas=52,
-                    fecha_inicio=fecha_inicio
+                contrato, _ = Contrato.objects.get_or_create(
+                    cliente=cliente,
+                    carro=auto,
+                    defaults={
+                        "cuota_semanal": fila["Cuota semanal"],
+                        "semanas_totales": 52,
+                        "fecha_inicio": fecha_inicio,
+                        "usuario_creacion_id": usuario_id,
+                    }
+
                 )
 
                 for semana in range(52):
                     vencimiento = fecha_inicio + timedelta(weeks=semana)
-                    Invoice.objects.create(
-                        contract=contrato,
-                        monto=fila["Cuota semanal"],
+                    Invoice.objects.get_or_create(
+                        contrato=contrato,
                         numero_cuota=semana + 1,
-                        fecha_vencimiento=vencimiento
+                        defaults={
+                            "monto": fila["Cuota semanal"],
+                            "fecha_vencimiento": vencimiento,
+                            "usuario_creacion_id": usuario_id,
+                        }
                     )
 
             messages.success(self.request, "Archivo cargado y datos registrados exitosamente.")

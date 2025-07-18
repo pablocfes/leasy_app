@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h1 class="mt-4">Carga Masiva de Contratos</h1>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {% else %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {% endif %}
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="archivo_contratos" class="form-label">Seleccione el archivo de contratos:</label>
+                <input class="form-control" type="file" id="archivo_contratos" name="archivo" accept=".xlsx, .xls, .csv" required>
+                <div class="form-text">Formatos soportados: Excel (.xlsx, .xls) o CSV</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-upload me-1"></i> Cargar Archivo
+            </button>
+
+        </form>
+
+        {% if mensaje %}
+        <div class="alert alert-{{ tipo_mensaje }} mt-3">
+            {{ mensaje }}
+            {% if errores %}
+                <ul class="mt-2">
+                    {% for error in errores %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
