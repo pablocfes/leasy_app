@@ -88,7 +88,7 @@ class CargaArchivoContratosView(LoginRequiredMixin, FormView):
                             }
                         )
 
-                        fecha_inicio = parse_date(str(fila["Inicio de contrato"]))
+                        fecha_inicio_formateada = parse_date(str(fila["Inicio de contrato"]))
 
                         contrato, creado = Contrato.objects.get_or_create(
                             cliente=cliente,
@@ -96,7 +96,7 @@ class CargaArchivoContratosView(LoginRequiredMixin, FormView):
                             defaults={
                                 "cuota_semanal": fila["Cuota semanal"],
                                 "semanas_totales": 52,
-                                "fecha_inicio": fecha_inicio,
+                                "fecha_inicio": fecha_inicio_formateada if fecha_inicio_formateada else fila["Inicio de contrato"],
                                 "usuario_creacion_id": usuario_id,
                             }
                         )
@@ -105,7 +105,7 @@ class CargaArchivoContratosView(LoginRequiredMixin, FormView):
                             raise ValueError("Ya existe un contrato con este cliente y auto.")
 
                         for semana in range(52):
-                            vencimiento = fecha_inicio + timedelta(weeks=semana)
+                            vencimiento = (fecha_inicio_formateada if fecha_inicio_formateada else fila["Inicio de contrato"]) + timedelta(weeks=semana)
                             Invoice.objects.get_or_create(
                                 contrato=contrato,
                                 numero_cuota=semana + 1,
