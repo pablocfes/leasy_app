@@ -1,35 +1,33 @@
 {% extends "base.html" %}
-{% load custom_tags %}
 {% block contenido %}
 
 <div class="container-fluid px-4">
     <h1 class="mt-4">{{ titulo }}</h1>
 
     <div class="card mb-4">
+
         <div class="card-body">
             <table id="datatablesSimple" class="table table-bordered">
                 <thead>
                     <tr>
                         {% for col in columnas %}
-                            <th>{{ col }}</th>
+                            <th>{{ col|capfirst }}</th>
                         {% endfor %}
-                        <th>Acciones</th>
                     </tr>
                 </thead>
+                <tfoot>
+                    <tr>
+                        {% for col in columnas %}
+                            <th>{{ col|capfirst }}</th>
+                        {% endfor %}
+                    </tr>
+                </tfoot>
                 <tbody>
                     {% for fila in filas %}
                         <tr>
                             {% for valor in fila.values %}
                                 <td>{{ valor }}</td>
                             {% endfor %}
-                            <td>
-                                <button type="button" class="btn btn-sm btn-primary editar-btn" 
-                                        data-id="{{ fila.id }}" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#editarModal">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -38,127 +36,4 @@
     </div>
 </div>
 
-<!-- Modal de Edición -->
-<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <form id="editarForm" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="id" id="editarId">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editarModalLabel">Editar Registro</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body row" id="formCampos">
-          <!-- Los campos se generarán dinámicamente con JavaScript -->
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Configuración del modal de edición
-    const editarModal = document.getElementById('editarModal');
-    const editarForm = document.getElementById('editarForm');
-    const formCampos = document.getElementById('formCampos');
-    
-    // Manejar clic en botones de editar
-    document.querySelectorAll('.editar-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-
-            const id = this.getAttribute('data-id');
-            console.log('Editando ID:', id);
-            document.getElementById('editarId').value = id;
-            
-            // Obtener datos de la fila (simulando una llamada AJAX)
-            fetch(`/obtener-datos/${id}/`)
-                .then(response => response.json())
-                .then(data => {
-                    // Limpiar campos anteriores
-                    formCampos.innerHTML = '';
-                    
-                    // Generar campos del formulario dinámicamente
-                    for (const [key, value] of Object.entries(data)) {
-                        if (key === 'id') continue;
-                        
-                        const div = document.createElement('div');
-                        div.className = 'mb-3 col-md-6';
-                        
-                        const label = document.createElement('label');
-                        label.className = 'form-label';
-                        label.textContent = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
-                        
-                        let input;
-                        if (key.toLowerCase().includes('fecha') || key.toLowerCase().includes('date')) {
-                            input = document.createElement('input');
-                            input.type = 'date';
-                            input.className = 'form-control';
-                            input.name = key;
-                            input.value = value ? value.split('T')[0] : '';
-                        } else if (typeof value === 'boolean') {
-                            input = document.createElement('select');
-                            input.className = 'form-select';
-                            input.name = key;
-                            input.innerHTML = `
-                                <option value="true" ${value ? 'selected' : ''}>Sí</option>
-                                <option value="false" ${!value ? 'selected' : ''}>No</option>
-                            `;
-                        } else {
-                            input = document.createElement('input');
-                            input.type = 'text';
-                            input.className = 'form-control';
-                            input.name = key;
-                            input.value = value || '';
-                        }
-                        
-                        div.appendChild(label);
-                        div.appendChild(input);
-                        formCampos.appendChild(div);
-                    }
-                    
-                    // Actualizar acción del formulario
-                    editarForm.action = `/editar/${id}/`;
-                })
-                .catch(error => {
-                    console.error('Error al obtener datos:', error);
-                    alert('Error al cargar los datos para editar');
-                });
-        });
-    });
-    
-    // Manejar envío del formulario
-    editarForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        fetch(this.action, {
-            method: 'POST',
-            body: new FormData(this),
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                location.reload(); // Recargar la página para ver los cambios
-            } else {
-                throw new Error('Error en la respuesta del servidor');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al guardar los cambios');
-        });
-    });
-});
-</script>
-
 {% endblock %}
-
-
-
