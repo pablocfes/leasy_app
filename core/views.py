@@ -16,7 +16,8 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['usuarios_count'] = Usuario.objects.filter(is_active=True).count()
         context['clientes_count'] = Cliente.objects.count()
-        context['vehiculos_count'] = Carro.objects.filter(disponible=True).count()
+        context['vehiculos_disponibles_count'] = Carro.objects.filter(disponible=True).count()
+        context['total_vehiculos'] = Carro.objects.all().count()
         context['contratos_count'] = Contrato.objects.filter(activo=True).count()
 
         contratos = Contrato.objects.select_related('cliente', 'carro').all().order_by('-fecha_inicio')
