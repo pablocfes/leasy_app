@@ -1,7 +1,5 @@
 # Leasy - Sistema de Gestión de Contratos y Facturación
 
-[https://img.shields.io/badge/Django-5.2-green](https://img.shields.io/badge/Django-5.2-green)
-[https://img.shields.io/badge/Bootstrap-5+-purple](https://img.shields.io/badge/Bootstrap-5+-purple)
 
 Leasy es un sistema web construido con Django 5.2 para la gestión de clientes, vehículos, contratos y facturas, con capacidades de carga de archivos Excel/CSV y generación de reportes.
 
@@ -29,7 +27,7 @@ Leasy es un sistema web construido con Django 5.2 para la gestión de clientes, 
    **bash**
 
 ```
-   git clone https://github.com/tu-usuario/leasy.git
+   git clone https://github.com/pablocfes/leasy_app.git
    cd leasy
 ```
 
