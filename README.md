@@ -33,27 +33,28 @@ Leasy es un sistema web construido con Django 5.2 para la gestión de clientes, 
    cd leasy
 ```
 
-1. **Crear y activar entorno virtual** (recomendado):
+2. **Crear y activar entorno virtual** (recomendado):
    **bash**
 
-   ```
-   python -m venv venv
-   source venv/bin/activate  # Linux/Mac
-   venv\Scripts\activate     # Windows
-   ```
-2. **Instalar dependencias** :
+```
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
+```
+
+3. **Instalar dependencias** :
    **bash**
 
 ```
    pip install -r requirements.txt
 ```
 
-1. **Configurar base de datos** :
+4. **Configurar base de datos** :
 
 * Crear una base de datos PostgreSQL o usar SQLite
 * Configurar las variables de conexión en `settings.py`
 
-1. **Migraciones y superusuario** :
+5. **Migraciones y superusuario** :
    **bash**
 
 ```
@@ -61,14 +62,14 @@ Leasy es un sistema web construido con Django 5.2 para la gestión de clientes, 
    python manage.py createsuperuser
 ```
 
-1. **Ejecutar servidor de desarrollo** :
+6. **Ejecutar servidor de desarrollo** :
    **bash**
 
 ```
    python manage.py runserver
 ```
 
-1. **Acceder al sistema** :
+7. **Acceder al sistema** :
    **text**
 
 ```
@@ -82,12 +83,11 @@ Leasy es un sistema web construido con Django 5.2 para la gestión de clientes, 
 ```
 leasy/
 ├── core/               # App principal
-├── clients/            # Gestión de clientes
-├── contracts/          # Gestión de contratos
-├── cars/               # Gestión de vehículos
+├── clientes/           # Gestión de clientes
+├── contratos/          # Gestión de contratos
+├── vehiculos/               # Gestión de vehículos
 ├── invoices/           # Gestión de facturas
-├── uploads/            # Procesamiento de archivos
-├── reports/            # Generación de reportes
+├── reportes/            # Generación de reportes
 ├── static/             # Archivos estáticos
 ├── templates/          # Plantillas HTML
 ├── manage.py
@@ -101,17 +101,17 @@ leasy/
 * Iniciar sesión con email y contraseña
 * Usuarios no autenticados son redirigidos al login
 
-1. **Dashboard** :
+2. **Dashboard** :
 
 * Listado paginado de contratos (20 por página)
 * Buscador por nombre, apellido, documento o vehículo
 
-1. **Carga de archivos** :
+3. **Carga de archivos** :
 
 * Subir archivos Excel/CSV con datos
 * Validación de columnas requeridas
 
-1. **Reportes** :
+4. **Reportes** :
 
 * Seleccionar columnas para el reporte
 * Generar y descargar reporte en Excel
