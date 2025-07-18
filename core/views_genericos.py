@@ -1,6 +1,4 @@
-from django.views.generic import TemplateView, View
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
+from django.views.generic import TemplateView
 
 # local imports
 from core.mixins import LoginRequiredMixin
@@ -32,22 +30,3 @@ class ModeloDinamicoListView(LoginRequiredMixin, TemplateView):
         context['columnas'] = columnas_verbose
         context['filas'] = filas
         return context
-
-
-
-
-class ModeloDinamicoUpdateView(LoginRequiredMixin, View):
-    model = None
-    success_url = '/'
-
-    def post(self, request, id):
-        instance = get_object_or_404(self.model, pk=id)
-
-        for field in self.model._meta.fields:
-            name = field.name
-            if name in request.POST and name != 'id':
-                setattr(instance, name, request.POST.get(name))
-
-        instance.save()
-        messages.success(request, 'Registro actualizado correctamente.')
-        return redirect(self.success_url)

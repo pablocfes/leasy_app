@@ -21,3 +21,9 @@ class Cliente(AuditoriaMixin):
 
     def __str__(self):
         return f"{self.nombres} {self.apellidos} ({self.numero_documento})"
+
+    def get_full_name(self):
+        """
+        Retorna el nombre completo del cliente.
+        """
+        return f"{self.nombres} {self.apellidos}"

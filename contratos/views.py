@@ -4,7 +4,11 @@ from django.urls import reverse_lazy
 from django.utils.dateparse import parse_date
 from django.views.generic import FormView
 from django.contrib import messages
+from django.db import transaction
+
+# third-party
 import pandas as pd
+
 
 # propios
 from contratos.forms import ArchivoCargaForm
@@ -58,55 +62,57 @@ class CargaArchivoContratosView(LoginRequiredMixin, FormView):
                 messages.error(self.request, f"Columnas faltantes: {', '.join(faltantes)}")
                 return self.form_invalid(form)
 
-            for _, fila in df.iterrows():
+            with transaction.atomic():
+                for _, fila in df.iterrows():
 
-                cliente, _ = Cliente.objects.get_or_create(
-                    numero_documento=str(fila["Número de documento"]),
-                    defaults={
-                        "nombres": fila["Nombres"],
-                        "apellidos": fila["Apellidos"],
-                        "usuario_creacion_id": usuario_id,
-                    }
-                )
-
-                auto, _ = Carro.objects.get_or_create(
-                    placa=fila["Placa del auto"],
-                    defaults={
-                        "marca": fila["Marca del auto"],
-                        "modelo": fila["Modelo del auto"],
-                        "usuario_creacion_id": usuario_id,
-                    }
-                )
-
-                fecha_inicio = parse_date(str(fila["Inicio de contrato"]))
-                contrato, _ = Contrato.objects.get_or_create(
-                    cliente=cliente,
-                    carro=auto,
-                    defaults={
-                        "cuota_semanal": fila["Cuota semanal"],
-                        "semanas_totales": 52,
-                        "fecha_inicio": fecha_inicio,
-                        "usuario_creacion_id": usuario_id,
-                    }
-
-                )
-
-                for semana in range(52):
-                    vencimiento = fecha_inicio + timedelta(weeks=semana)
-                    Invoice.objects.get_or_create(
-                        contrato=contrato,
-                        numero_cuota=semana + 1,
+                    cliente, _ = Cliente.objects.get_or_create(
+                        numero_documento=str(fila["Número de documento"]),
                         defaults={
-                            "monto": fila["Cuota semanal"],
-                            "fecha_vencimiento": vencimiento,
+                            "nombres": fila["Nombres"],
+                            "apellidos": fila["Apellidos"],
                             "usuario_creacion_id": usuario_id,
                         }
                     )
+
+                    auto, _ = Carro.objects.get_or_create(
+                        placa=fila["Placa del auto"],
+                        defaults={
+                            "marca": fila["Marca del auto"],
+                            "modelo": fila["Modelo del auto"],
+                            "usuario_creacion_id": usuario_id,
+                        }
+                    )
+
+                    fecha_inicio = parse_date(str(fila["Inicio de contrato"]))
+                    contrato, _ = Contrato.objects.get_or_create(
+                        cliente=cliente,
+                        carro=auto,
+                        defaults={
+                            "cuota_semanal": fila["Cuota semanal"],
+                            "semanas_totales": 52,
+                            "fecha_inicio": fecha_inicio,
+                            "usuario_creacion_id": usuario_id,
+                        }
+
+                    )
+
+                    for semana in range(52):
+                        vencimiento = fecha_inicio + timedelta(weeks=semana)
+                        Invoice.objects.get_or_create(
+                            contrato=contrato,
+                            numero_cuota=semana + 1,
+                            defaults={
+                                "monto": fila["Cuota semanal"],
+                                "fecha_vencimiento": vencimiento,
+                                "usuario_creacion_id": usuario_id,
+                            }
+                        )
 
             messages.success(self.request, "Archivo cargado y datos registrados exitosamente.")
             return super().form_valid(form)
 
         except Exception as e:
+            transaction.set_rollback(True)
             messages.error(self.request, f"Error al procesar archivo: {str(e)}")
             return self.form_invalid(form)
 

@@ -29,5 +29,6 @@ urlpatterns = [
     path("clientes/", include("clientes.urls"), name="clientes"),
     path("usuarios/", include("usuarios.urls"), name="usuarios"),
     path("invoices/", include("invoices.urls"), name="invoices"),
+    path("reportes/", include("reportes.urls"), name="reportes"),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,4 @@
 # django imports
-from django.shortcuts import render
 from django.views.generic import TemplateView
 
 # local imports
@@ -23,13 +22,15 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         contratos = Contrato.objects.select_related('cliente', 'carro').all().order_by('-fecha_inicio')
 
         context['titulo'] = "Contratos recientes"
-        context['columnas'] = ['ID', 'Cliente', 'Vehículo', 'Fecha', 'Estado']
-        context['columnas'] = ['ID', 'Cliente', 'Vehículo', 'Fecha', 'Estado']
+        context['columnas'] = ['ID', 'Cliente', 'Numero Idetificación', 'Placa Vehículo', 'Marca', 'Modelo', 'Fecha Inicio Contrato', 'Estado']
         context['filas'] = [
             [
                 contrato.id,
-                str(contrato.cliente),
-                str(contrato.carro),
+                str(contrato.cliente.get_full_name()),
+                contrato.cliente.numero_documento,
+                str(contrato.carro.placa),
+                str(contrato.carro.marca),
+                str(contrato.carro.modelo),
                 contrato.fecha_inicio.strftime('%Y-%m-%d'),
                 'Activo' if contrato.activo else 'Inactivo'
             ]
@@ -37,5 +38,3 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         ]
 
         return context
-
-
